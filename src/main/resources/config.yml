@@ -1,0 +1,44 @@
+#
+# ForestSit v1.0.1
+#
+#   If you find bug or you have an idea for an adjustment, please contact us on
+#   https://discord.com/invite/2PpdrfxhD4
+#
+
+#
+# Messages
+#
+#  RGB support
+#
+messages:
+  noPerm: "{#c1a005>}&lForestSit{#c8b567<} &7You don't have sufficient permissions..."
+  successSit: "{#c1a005>}&lForestSit{#c8b567<} &7You have successfully sat down..."
+  alreadySitting: "{#c1a005>}&lForestSit{#c8b567<} &7You're already seated..."
+  playerInAir: "{#c1a005>}&lForestSit{#c8b567<} &7You're currently in the air!"
+  configReload: "{#c1a005>}&lForestSit{#c8b567<} &7Config reloading..."
+  wrongSyntax: "{#c1a005>}&lForestSit{#c8b567<} &7Wrong input..."
+
+#
+# Permissions
+#
+#  If you edit permissions
+#  you need to edit it in your permissions manager plugin
+permissions:
+  admin: "forestsit.admin"
+  player:
+    eventUse: "forestsit.event.stairs"
+    commandUse: "forestsit.command"
+
+#
+# Events
+#
+events:
+  stairs: true
+
+#
+# Data
+#
+#  Please use "," to split materials
+#
+data:
+  materials: "OAK_STAIRS, SPRUCE_STAIRS"
