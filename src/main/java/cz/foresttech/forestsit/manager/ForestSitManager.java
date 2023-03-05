@@ -1,38 +1,35 @@
 package cz.foresttech.forestsit.manager;
 
-import com.tchristofferson.configupdater.ConfigUpdater;
 import cz.foresttech.forestsit.ForestSit;
+import cz.foresttech.forestsit.config.ConfigAPI;
 import cz.foresttech.forestsit.config.ConfigOptions;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
-
 public class ForestSitManager {
-    private ForestSit forestSit;
+
+    private ForestSit plugin;
+
+    private ConfigAPI configAPI;
 
     private HashMap<String, ArmorStand> armorStandHashMap;
 
-    private String noPerm = null;
-    private String successSit = null;
-    private String alreadySitting = null;
-    private String playerInAirError = null;
-    private String configReload = null;
-    private String wrongSyntax = null;
+    private String noPerm;
+    private String successSit;
+    private String alreadySitting;
+    private String playerInAirError;
+    private String configReload;
+    private String wrongSyntax;
 
-    private boolean eventStairsSit = false;
+    private boolean eventStairsSit;
 
-    private String permsAdmin = null;
-    private String permsCommandUse = null;
-    private String permsEventUse = null;
+    private String permsAdmin;
+    private String permsCommandUse;
+    private String permsEventUse;
 
 
     private String materials;
@@ -40,26 +37,20 @@ public class ForestSitManager {
     /*-----------------------------------------------------------------------------*/
 
     public ForestSitManager() {
-        this.forestSit = ForestSit.getInstance();
+        this.plugin = ForestSit.getInstance();
         loadConfig();
         loadData();
-        //HashMap for save data of armorstand, and player
-        armorStandHashMap = new HashMap<>();
 
     }
 
-
+    /**
+     *
+     * Load config from Config API
+     *
+     */
     public void loadConfig() {
-        if (!forestSit.getDataFolder().exists())
-            forestSit.getDataFolder().mkdir();
-        forestSit.saveDefaultConfig();
-        File file = new File(ForestSit.getInstance().getDataFolder() + "/config.yml");
-        try {
-            ConfigUpdater.update(ForestSit.getInstance(), "config.yml", file, new ArrayList());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        forestSit.reloadConfig();
+        configAPI = new ConfigAPI(plugin, "config");
+        configAPI.create();
     }
 
 
@@ -71,22 +62,22 @@ public class ForestSitManager {
      *
      */
     public void loadData() {
-        //Config setup
+        armorStandHashMap = new HashMap<>();
 
-        materials = forestSit.getConfig().getString(ConfigOptions.MATERIALS);
-        eventStairsSit = forestSit.getConfig().getBoolean(ConfigOptions.EVENT_SIT);
+        materials = configAPI.getConfig().getString(ConfigOptions.MATERIALS);
+        eventStairsSit = configAPI.getConfig().getBoolean(ConfigOptions.EVENT_SIT);
 
 
-        permsAdmin = forestSit.getConfig().getString(ConfigOptions.PERM_ADMIN);
-        permsCommandUse = forestSit.getConfig().getString(ConfigOptions.PERM_COMMAND_USE);
-        permsEventUse = forestSit.getConfig().getString(ConfigOptions.PERM_EVENT_USE);
+        permsAdmin = configAPI.getConfig().getString(ConfigOptions.PERM_ADMIN);
+        permsCommandUse = configAPI.getConfig().getString(ConfigOptions.PERM_COMMAND_USE);
+        permsEventUse = configAPI.getConfig().getString(ConfigOptions.PERM_EVENT_USE);
 
-        wrongSyntax = forestSit.getConfig().getString(ConfigOptions.WRONG_SYNTAX);
-        playerInAirError = forestSit.getConfig().getString(ConfigOptions.PLAYER_IN_AIR);
-        noPerm = forestSit.getConfig().getString(ConfigOptions.NO_PERM);
-        successSit = forestSit.getConfig().getString(ConfigOptions.SUCCESS_SIT);
-        alreadySitting = forestSit.getConfig().getString(ConfigOptions.ALREADY_SITTING);
-        configReload = forestSit.getConfig().getString(ConfigOptions.CONFIG_RELOAD);
+        wrongSyntax = configAPI.getConfig().getString(ConfigOptions.WRONG_SYNTAX);
+        playerInAirError = configAPI.getConfig().getString(ConfigOptions.PLAYER_IN_AIR);
+        noPerm = configAPI.getConfig().getString(ConfigOptions.NO_PERM);
+        successSit = configAPI.getConfig().getString(ConfigOptions.SUCCESS_SIT);
+        alreadySitting = configAPI.getConfig().getString(ConfigOptions.ALREADY_SITTING);
+        configReload = configAPI.getConfig().getString(ConfigOptions.CONFIG_RELOAD);
 
     }
 
@@ -124,7 +115,7 @@ public class ForestSitManager {
 
         Arrow arrow = (Arrow) newLocation.getWorld().spawn(newLocation, Arrow.class);
         Location lastLocation = arrow.getLocation().clone().subtract(0.0D, 1.4D, 0.0D);
-        ArmorStand seat = (ArmorStand)clickedBlockLocation.getWorld().spawn(lastLocation, ArmorStand.class);
+        ArmorStand seat = (ArmorStand) clickedBlockLocation.getWorld().spawn(lastLocation, ArmorStand.class);
 
         arrow.remove();
 
@@ -137,13 +128,28 @@ public class ForestSitManager {
 
     /*-----------------------------------------------------------------------------*/
 
+    /**
+     *
+     * Reload config method, with realoding data
+     *
+     */
+    public void reloadConfig() {
+        configAPI.reload();
+        configAPI.save();
+        plugin.getForestSitManager().loadData();
+    }
+
+    /*-----------------------------------------------------------------------------*/
+
+    /**
+     *
+     * Remove armorstand from hashmap, and delete
+     *
+     */
     public void removeSeat(Player player) {
         ArmorStand seat = armorStandHashMap.get(player.getName().toLowerCase());
         seat.remove();
-    }
-
-    public ForestSit getForestSit() {
-        return forestSit;
+        armorStandHashMap.remove(player.getName().toLowerCase());
     }
 
     public HashMap<String, ArmorStand> getArmorStandHashMap() {

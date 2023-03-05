@@ -18,21 +18,18 @@ public class ForestSit extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        instance=this;
+        instance = this;
         forestSitManager = new ForestSitManager();
         forestSitController = new ForestSitController();
-
-
 
         registerListener(new ForestSitListener());
         registerCommand(new ForestSitCommand(), "forestsit");
 
-
         getLogger().info(" ");
-        getLogger().info(" ForestSit v1.0.1 | Enabled");
+        getLogger().info(" ForestSit v1.0.0 | Enabled");
         getLogger().info("  ");
         getLogger().info("   Author: Fly_Ultra");
-        getLogger().info("   Version: 1.0.1");
+        getLogger().info("   Version: 1.0.0");
         getLogger().info("   Spigot");
         getLogger().info(" ");
     }
@@ -42,10 +39,10 @@ public class ForestSit extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().warning(" ");
-        getLogger().warning(" ForestSit v1.0.1 | Disabled");
+        getLogger().warning(" ForestSit v1.0.0 | Disabled");
         getLogger().warning("  ");
         getLogger().warning("   Author: Fly_Ultra");
-        getLogger().warning("   Version: 1.0.1");
+        getLogger().warning("   Version: 1.0.0");
         getLogger().warning("   Spigot");
         getLogger().warning(" ");
     }
@@ -53,7 +50,7 @@ public class ForestSit extends JavaPlugin {
     /*-----------------------------------------------------------------------------*/
 
     public void registerListener(Listener listener) {
-        getServer().getPluginManager().registerEvents(listener,ForestSit.getInstance());
+        getServer().getPluginManager().registerEvents(listener, ForestSit.getInstance());
 
     }
 

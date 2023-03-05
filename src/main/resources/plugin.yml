@@ -1,8 +1,7 @@
 name: ForestSit
 main: cz.foresttech.forestsit.ForestSit
 author: Fly_Ultra
-version: 1.0.1
-description: ForestSit is simple plugin for sit
+version: 1.0.0
 api-version: 1.19
 
 commands:

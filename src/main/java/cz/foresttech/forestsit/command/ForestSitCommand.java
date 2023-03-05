@@ -1,43 +1,37 @@
 package cz.foresttech.forestsit.command;
 
 import cz.foresttech.forestsit.ForestSit;
-import cz.foresttech.forestsit.utils.colors.ColorAPI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import cz.foresttech.api.ColorAPI;
 
 public class ForestSitCommand implements CommandExecutor {
-    private ForestSit forestSit;
+    private ForestSit plugin;
 
     public ForestSitCommand() {
-        this.forestSit = ForestSit.getInstance();
+        this.plugin = ForestSit.getInstance();
     }
-
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String s, String[] args) {
-
         if (!(sender instanceof Player)) {
-            forestSit.getLogger().warning("Command can be used only from game!");
+            plugin.getLogger().warning("Command can be used only from game!");
             return true;
         }
         Player player = (Player) sender;
 
         if (args.length > 0) {
-            if (args[0].equalsIgnoreCase("config") && args[1].equalsIgnoreCase("reload") && player.hasPermission(forestSit.getForestSitManager().getPermsAdmin())) {
-                forestSit.reloadConfig();
-                forestSit.saveConfig();
-                forestSit.getForestSitManager().loadData();
-                player.sendMessage(ColorAPI.colorize(forestSit.getForestSitManager().getConfigReload()));
+            if (args[0].equalsIgnoreCase("config") && args[1].equalsIgnoreCase("reload") && player.hasPermission(plugin.getForestSitManager().getPermsAdmin())) {
+                plugin.getForestSitController().reloadData(player);
                 return true;
             }
-            player.sendMessage(ColorAPI.colorize(forestSit.getForestSitManager().getWrongSyntax()));
+            player.sendMessage(ColorAPI.colorize(plugin.getForestSitManager().getWrongSyntax()));
             return true;
         }
-        forestSit.getForestSitController().sit(player);
+        plugin.getForestSitController().sit(player);
         return true;
     }
-
 
 }
